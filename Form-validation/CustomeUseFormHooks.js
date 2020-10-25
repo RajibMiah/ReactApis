@@ -1,25 +1,39 @@
-import React,  {useEffect , useState} from 'react'
-import {makeStyles} from '@material-ui/core'
+import React, { useState } from 'react'
+import { makeStyles } from "@material-ui/core";
 
-export const useFrom = (initalFielValue)=>{
+export const useForm = (initialFValues, validateOnChange = false, validate) => {
 
-  const [value , setValue] = useState(initalFielValue)
+    const [values, setValues] = useState(initialFValues);
+    const [errors, setErrors] = useState({});
 
-  const handleInputChange = e =>{
-   const  {name , value} = e.target
-    setValue({
-      ...value,
-      [name] : value
-    })
-  }
-  return {
-    value ,
-    setValue,
-    handleInputChange
-  }
+    const handleInputChange = e => {
+        const { name, value } = e.target
+        setValues({
+            ...values,
+            [name]: value
+        })
+        if (validateOnChange)
+            validate({ [name]: value })
+    }
+
+    const resetForm = () => {
+        setValues(initialFValues);
+        setErrors({})
+    }
+
+
+    return {
+        values,
+        setValues,
+        errors,
+        setErrors,
+        handleInputChange,
+        resetForm
+
+    }
 }
 
-
+//functional Form component for reuseavality  
 const useStyle = makeStyles(theme =>({
   root:{
     '& .MuiTextField-root':{
